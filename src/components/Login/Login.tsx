@@ -39,6 +39,7 @@ const Login = () => {
           • &nbsp; Login Into Your Account &nbsp; •
         </label>
         <input
+          defaultValue="testuser"
           required
           aria-required
           name="username"
@@ -47,6 +48,7 @@ const Login = () => {
           className="bg-gray-100 px-4 py-2 rounded outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
         />
         <input
+          defaultValue="1234"
           required
           aria-required
           name="password"

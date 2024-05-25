@@ -31,6 +31,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             username: "admin",
             password: "admin",
           },
+          {
+            id: "U003",
+            role: "user",
+            username: "testuser",
+            password: "1234",
+          },
         ];
 
         const user = users.find(
@@ -68,4 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
+  pages: {
+    signIn: "/login"
+  }
 });
