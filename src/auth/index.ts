@@ -18,18 +18,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
       authorize: async (credentials) => {
+        const DJ_URL = String(process.env.DJ_URL);
         // Fetch user from Django API
-        const res = await fetch(
-          "https://wastemanapi.pythonanywhere.com/auth/login/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              phone: credentials?.username,
-              password: credentials?.password,
-            }),
-          }
-        );
+        const res = await fetch(DJ_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: credentials?.username,
+            password: credentials?.password,
+          }),
+        });
         const data = await res.json();
 
         if (res.ok && data) {
