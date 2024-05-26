@@ -1,11 +1,12 @@
-import Login from "@/components/Login/Login"
+import Login from "@/components/Login/Login";
 
-const LoginPage = () => {
+const LoginPage = async () => {
+
   return (
     <div>
       <Login />
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

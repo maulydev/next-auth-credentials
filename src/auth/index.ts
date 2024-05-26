@@ -18,37 +18,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
       authorize: async (credentials) => {
-        const users = [
+        // Fetch user from Django API
+        const res = await fetch(
+          "https://wastemanapi.pythonanywhere.com/auth/login/",
           {
-            id: "U001",
-            role: "user",
-            username: "maulydotdev",
-            password: "1234",
-          },
-          {
-            id: "U002",
-            role: "admin",
-            username: "admin",
-            password: "admin",
-          },
-          {
-            id: "U003",
-            role: "user",
-            username: "testuser",
-            password: "1234",
-          },
-        ];
-
-        const user = users.find(
-          (user) =>
-            user.username === credentials?.username &&
-            user.password === credentials?.password
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              phone: credentials?.username,
+              password: credentials?.password,
+            }),
+          }
         );
+        const data = await res.json();
 
-        if (user) {
-          console.log(credentials);
-          return user;
+        if (res.ok && data) {
+          return data;
         }
+
         return null;
       },
     }),
@@ -56,25 +43,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }: any) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.username = user.username;
-        token.access =
-          "eyJhbGciOiJIUzI1NiJ9";
+        token.id = user.user.id;
+        token.role = user.user.role;
+        token.access = user.access;
+        token.username = user.user.username;
+        token.customer_id = user.user.customer_id;
       }
       return token;
     },
     async session({ session, token }: any) {
       if (session?.user) {
+        session.access = token.access;
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.username = token.username;
-        session.access = token.access;
+        session.user.customer_id = token.customer_id;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/login"
-  }
+    signIn: "/login",
+  },
 });

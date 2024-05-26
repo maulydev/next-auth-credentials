@@ -6,9 +6,11 @@ const Navbar = async () => {
 
   return (
     <div className="flex gap-4 items-center justify-center fixed inset-x-0 top-0 bg-gray-600 text-white p-3">
-      <Link href="/">USER ACCESS</Link>
+      <Link href="/customer">CUSTOMER ACCESS</Link>
       |
       <Link href="/admin">ADMIN ACCESS</Link>
+      |
+      <Link href="/agent">AGENT ACCESS</Link>
     </div>
   );
 };

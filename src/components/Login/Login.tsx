@@ -1,27 +1,37 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 const Login = () => {
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleFormSubmit = (e: FormEvent) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target as HTMLFormElement);
-      const response: any = signIn("credentials", {
-        redirect: true,
-        callbackUrl: "/",
+      const response: any = await signIn("credentials", {
+        redirect: false,
+        // callbackUrl: "/",
         username: formData.get("username"),
         password: formData.get("password"),
       });
 
-      if (response.error) {
-        throw new Error(response.error);
-      }
+      if (response.error) throw new Error(response.error);
+
+      router.replace("/");
+      router.refresh();
+
     } catch (error: any) {
-      setError(error.message);
+      if (error) {
+        if (error.message === "CredentialsSignin") {
+          setError("Invalid Credentials!");
+          return;
+        }
+        setError(error.message);
+      }
     }
   };
   return (
@@ -39,7 +49,7 @@ const Login = () => {
           • &nbsp; Login Into Your Account &nbsp; •
         </label>
         <input
-          defaultValue="testuser"
+          defaultValue="0200000001"
           required
           aria-required
           name="username"
@@ -48,7 +58,7 @@ const Login = () => {
           className="bg-gray-100 px-4 py-2 rounded outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500"
         />
         <input
-          defaultValue="1234"
+          defaultValue="111111"
           required
           aria-required
           name="password"
